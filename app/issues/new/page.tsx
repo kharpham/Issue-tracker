@@ -1,4 +1,5 @@
 "use client";
+import ErrorMessage from "@/app/components/ErrorMessage";
 import { createIssueSchema, IssueForm } from "@/app/validationSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Callout, Text, TextField } from "@radix-ui/themes";
@@ -13,7 +14,7 @@ const NewIssuePage = () => {
   const { register, handleSubmit, control, formState: {errors} } = useForm<IssueForm>({
     resolver: zodResolver(createIssueSchema),
   });
-  console.log(errors);
+  console.log(errors); 
   const router = useRouter();
   const [error, setError] = useState("");
 
@@ -37,7 +38,7 @@ const NewIssuePage = () => {
         })}
       >
         <TextField.Root placeholder="Title" {...register("title")} />
-        {errors.title && <Text color="red" as="p">{errors.title.message}</Text> }
+        <ErrorMessage>{errors.title?.message}</ErrorMessage>
         <Controller
           name="description"
           control={control}
@@ -45,7 +46,7 @@ const NewIssuePage = () => {
             <SimpleMDE placeholder="Description" {...field} />
           )}
         />
-        {errors.description && <Text color="red" as="div">{errors.description.message}</Text> } 
+        <Text color="red" as="div">{errors.description?.message}</Text>
         <Button>Create Issue</Button>
       </form>
     </div>
