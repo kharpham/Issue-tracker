@@ -1,5 +1,6 @@
 "use client";
 import ErrorMessage from "@/app/components/ErrorMessage";
+import LoadingIndicator from "@/app/components/LoadingIndicator";
 import { createIssueSchema, IssueForm } from "@/app/validationSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Callout, Text, TextField } from "@radix-ui/themes";
@@ -17,6 +18,7 @@ const NewIssuePage = () => {
   console.log(errors); 
   const router = useRouter();
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <div className="max-w-xl">
@@ -28,12 +30,14 @@ const NewIssuePage = () => {
       <form
         className=" space-y-3"
         onSubmit={handleSubmit(async (data) => {
+          setIsLoading(true);
           try {
             const result = await axios.post("/api/issues", data);
             router.push("/issues");
-            setError("");
           } catch (error) {
+            setIsLoading(false);
             setError("An unexpected error occurred");
+            
           }
         })}
       >
@@ -47,7 +51,7 @@ const NewIssuePage = () => {
           )}
         />
         <Text color="red" as="div">{errors.description?.message}</Text>
-        <Button>Create Issue</Button>
+        <Button disabled={isLoading}>Create Issue {isLoading && <LoadingIndicator/>} </Button>
       </form>
     </div>
   );
