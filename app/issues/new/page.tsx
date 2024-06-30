@@ -12,13 +12,29 @@ import { Controller, useForm } from "react-hook-form";
 import SimpleMDE from "react-simplemde-editor";
 
 const NewIssuePage = () => {
-  const { register, handleSubmit, control, formState: {errors} } = useForm<IssueForm>({
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<IssueForm>({
     resolver: zodResolver(createIssueSchema),
   });
-  console.log(errors); 
+  console.log(errors);
   const router = useRouter();
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const onSubmit = handleSubmit(async (data: IssueForm) => {
+    setIsLoading(true);
+    try {
+      const result = await axios.post("/api/issues", data);
+      router.push("/issues");
+    } catch (error) {
+      setIsLoading(false);
+      setError("An unexpected error occurred");
+    }
+  });
 
   return (
     <div className="max-w-xl">
@@ -27,20 +43,7 @@ const NewIssuePage = () => {
           <Callout.Text>{error}</Callout.Text>
         </Callout.Root>
       )}
-      <form
-        className=" space-y-3"
-        onSubmit={handleSubmit(async (data) => {
-          setIsLoading(true);
-          try {
-            const result = await axios.post("/api/issues", data);
-            router.push("/issues");
-          } catch (error) {
-            setIsLoading(false);
-            setError("An unexpected error occurred");
-            
-          }
-        })}
-      >
+      <form className=" space-y-3" onSubmit={onSubmit}>
         <TextField.Root placeholder="Title" {...register("title")} />
         <ErrorMessage>{errors.title?.message}</ErrorMessage>
         <Controller
@@ -50,8 +53,12 @@ const NewIssuePage = () => {
             <SimpleMDE placeholder="Description" {...field} />
           )}
         />
-        <Text color="red" as="div">{errors.description?.message}</Text>
-        <Button disabled={isLoading}>Create Issue {isLoading && <LoadingIndicator/>} </Button>
+        <Text color="red" as="div">
+          {errors.description?.message}
+        </Text>
+        <Button disabled={isLoading}>
+          Create Issue {isLoading && <LoadingIndicator />}{" "}
+        </Button>
       </form>
     </div>
   );
