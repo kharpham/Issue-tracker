@@ -1,6 +1,6 @@
 "use client";
 import { ErrorMessage, LoadingIndicator } from "@/app/components";
-import { createIssueSchema, IssueFormData } from "@/app/validationSchemas";
+import { issueSchema, IssueFormData } from "@/app/validationSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Issue } from "@prisma/client";
 import { Button, Callout, Text, TextField } from "@radix-ui/themes";
@@ -26,7 +26,7 @@ const IssueForm = ({ issue }: Props) => {
     control,
     formState: { errors },
   } = useForm<IssueFormData>({
-    resolver: zodResolver(createIssueSchema),
+    resolver: zodResolver(issueSchema),
   });
   const router = useRouter();
   const [error, setError] = useState("");
