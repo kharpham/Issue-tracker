@@ -1,6 +1,5 @@
 "use client";
-import ErrorMessage from "@/app/components/ErrorMessage";
-import LoadingIndicator from "@/app/components/LoadingIndicator";
+import { ErrorMessage, LoadingIndicator } from "@/app/components";
 import { createIssueSchema, IssueForm } from "@/app/validationSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Callout, Text, TextField } from "@radix-ui/themes";
