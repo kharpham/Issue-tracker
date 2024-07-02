@@ -1,6 +1,6 @@
 "use client";
 import { ErrorMessage, LoadingIndicator } from "@/app/components";
-import { issueSchema, IssueFormData } from "@/app/validationSchemas";
+import { IssueFormData, issueSchema } from "@/app/validationSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Issue } from "@prisma/client";
 import { Button, Callout, Text, TextField } from "@radix-ui/themes";
@@ -34,8 +34,13 @@ const IssueForm = ({ issue }: Props) => {
   const onSubmit = handleSubmit(async (data: IssueFormData) => {
     setIsLoading(true);
     try {
-      await axios.post("/api/issues", data);
-      router.push("/issues");
+      if (issue) {
+        await axios.patch(`/api/issues/${issue.id}`, data);
+        router.push(`/issues/${issue.id}`);
+      } else {
+        await axios.post("/api/issues", data);
+        router.push("/issues");
+      }
     } catch (error) {
       setIsLoading(false);
       setError("An unexpected error occurred");
@@ -68,7 +73,7 @@ const IssueForm = ({ issue }: Props) => {
           {errors.description?.message}
         </Text>
         <Button disabled={isLoading}>
-          Create Issue {isLoading && <LoadingIndicator />}{" "}
+          {issue ? "Update Issue": "Create Issue"} {isLoading && <LoadingIndicator />}{" "}
         </Button>
       </form>
     </div>
