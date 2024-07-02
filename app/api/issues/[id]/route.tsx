@@ -17,6 +17,7 @@ export async function PATCH(
     data: {
       title: result.data.title,
       description: result.data.description,
+      status: result.data.status,
     },
   });
   return NextResponse.json(updatedIssue);

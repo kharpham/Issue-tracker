@@ -1,9 +1,9 @@
 "use client";
-import { ErrorMessage, LoadingIndicator } from "@/app/components";
+import { ErrorMessage, IssueStatusBadge, LoadingIndicator } from "@/app/components";
 import { IssueFormData, issueSchema } from "@/app/validationSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Issue } from "@prisma/client";
-import { Button, Callout, Text, TextField } from "@radix-ui/themes";
+import { Issue, Status } from "@prisma/client";
+import { Button, Callout, Select, Text, TextField } from "@radix-ui/themes";
 import axios from "axios";
 import "easymde/dist/easymde.min.css";
 import dynamic from "next/dynamic";
@@ -20,6 +20,7 @@ interface Props {
 }
 
 const IssueForm = ({ issue }: Props) => {
+  const statuses: Status[] = ["OPEN", "IN_PROGRESS", "CLOSED"];
   const {
     register,
     handleSubmit,
@@ -36,10 +37,13 @@ const IssueForm = ({ issue }: Props) => {
     try {
       if (issue) {
         await axios.patch(`/api/issues/${issue.id}`, data);
+        console.log(data);
         router.push(`/issues/${issue.id}`);
+        router.refresh();
       } else {
         await axios.post("/api/issues", data);
         router.push("/issues");
+        router.refresh();
       }
     } catch (error) {
       setIsLoading(false);
@@ -54,7 +58,30 @@ const IssueForm = ({ issue }: Props) => {
           <Callout.Text>{error}</Callout.Text>
         </Callout.Root>
       )}
+      
       <form className=" space-y-3" onSubmit={onSubmit}>
+      {
+        issue && 
+        <Controller
+        name="status"
+        control={control}
+        render={({ field: {onChange, value} }) => (
+          <Select.Root value={value} onValueChange={onChange} defaultValue={issue.status}>
+            <Select.Trigger />
+            <Select.Content>
+              <Select.Group>
+                <Select.Label>Status</Select.Label>
+                {statuses.map(status => (
+                  <Select.Item key={status} value={status}>
+                    <IssueStatusBadge status={status} />
+                  </Select.Item>
+                ))}
+              </Select.Group>
+            </Select.Content>
+          </Select.Root>
+        )}
+      />
+      }
         <TextField.Root
           defaultValue={issue?.title}
           placeholder="Title"
