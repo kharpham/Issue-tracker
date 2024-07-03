@@ -17,12 +17,14 @@ const DropDown = ({ session }: Props) => {
           size="2"
           radius="full"
           className="cursor-pointer"
+          referrerPolicy="no-referrer"
         />
       </DropdownMenu.Trigger>
       <DropdownMenu.Content className="p-2">
         <Text>{session.user?.name}</Text>
-        <DropdownMenu.Item><Link href="/api/auth/signout">Sign out</Link></DropdownMenu.Item>
-        
+        <DropdownMenu.Item>
+          <Link href="/api/auth/signout">Sign out</Link>
+        </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
   );
