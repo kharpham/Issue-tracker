@@ -1,8 +1,12 @@
+"use client"
 import { Skeleton, Table } from "@radix-ui/themes";
 import IssueActions from "./_components/IssueActions";
+import { usePathname } from "next/navigation";
 
 const LoadingIssuesPage = () => {
   const skeletonNumbers = [1, 2, 3, 4, 5, 6];
+  const currentPath = usePathname();
+  if (currentPath !== "/issues") return <></>
   return (
     <>
       <IssueActions />
