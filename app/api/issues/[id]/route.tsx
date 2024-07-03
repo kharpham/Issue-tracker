@@ -2,11 +2,16 @@ import { fetchSingleIssue } from "@/app/issues/[id]/fetchSingleIssue";
 import { issueSchema } from "@/app/validationSchemas";
 import prisma from "@/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
+import secureAuth from "../secureAuth";
+import { getServerSession } from "next-auth";
+import authOptions from "@/app/auth/authOptions";
 
 export async function PATCH(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  const session = await getServerSession(authOptions);
+  if (!session) return NextResponse.json({}, { status: 401 });
   await fetchSingleIssue(params.id);
   const body = await request.json();
   const result = issueSchema.safeParse(body);
@@ -27,6 +32,8 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  const session = await getServerSession(authOptions);
+  if (!session) return NextResponse.json({}, { status: 401 });
   await fetchSingleIssue(params.id);
   await prisma.issue.delete({
     where: { id: parseInt(params.id) },
