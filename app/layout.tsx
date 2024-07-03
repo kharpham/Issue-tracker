@@ -1,11 +1,11 @@
 import { Container, Theme } from "@radix-ui/themes";
-import "./globals.css";
 import "@radix-ui/themes/styles.css";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google"; 
-import "./config-theme.css";
-import NavBar from "./NavBar";
+import { Inter } from "next/font/google";
 import AuthProvider from "./auth/AuthProvider";
+import "./config-theme.css";
+import "./globals.css";
+import NavBar from "./NavBar";
 import ReactQueryProvider from "./ReactQueryProvider";
 
 const inter = Inter({
@@ -26,15 +26,17 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable}>
       <body className={inter.className}>
-        <AuthProvider>
-        <Theme accentColor="violet">
-          <NavBar />
-          <main className="p-5">
-            <ReactQueryProvider><Container>{children}</Container></ReactQueryProvider>
-            </main>
-          {/* <ThemePanel/> */}
-        </Theme>
-        </AuthProvider>
+        <ReactQueryProvider>
+          <AuthProvider>
+            <Theme accentColor="violet">
+              <NavBar />
+              <main className="p-5">
+                <Container>{children}</Container>
+              </main>
+              {/* <ThemePanel/> */}
+            </Theme>
+          </AuthProvider>
+        </ReactQueryProvider>
       </body>
     </html>
   );
