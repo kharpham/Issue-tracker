@@ -1,5 +1,10 @@
-import IssueForm from "../../_components/IssueForm";
+import IssueFormSkeleton from "../../_components/IssueFormSkeleton";
 import { fetchSingleIssue } from "../fetchSingleIssue";
+import dynamic from "next/dynamic";
+
+const IssueForm = dynamic(() => import("@/app/issues/_components/IssueForm"), {
+  ssr: false, loading: () => <IssueFormSkeleton selectIncluded={true}/>
+} )
 
 interface Props {
   params: {

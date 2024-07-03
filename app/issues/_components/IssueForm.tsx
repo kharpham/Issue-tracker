@@ -1,19 +1,20 @@
 "use client";
-import { ErrorMessage, IssueStatusBadge, LoadingIndicator } from "@/app/components";
+import {
+  ErrorMessage,
+  IssueStatusBadge,
+  LoadingIndicator,
+} from "@/app/components";
 import { IssueFormData, issueSchema } from "@/app/validationSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Issue, Status } from "@prisma/client";
 import { Button, Callout, Select, Text, TextField } from "@radix-ui/themes";
 import axios from "axios";
 import "easymde/dist/easymde.min.css";
-import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import SimpleMDE from "react-simplemde-editor";
 // Lazy loading
-const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
-  ssr: false,
-});
 
 interface Props {
   issue?: Issue;
@@ -58,30 +59,33 @@ const IssueForm = ({ issue }: Props) => {
           <Callout.Text>{error}</Callout.Text>
         </Callout.Root>
       )}
-      
+
       <form className=" space-y-3" onSubmit={onSubmit}>
-      {
-        issue && 
-        <Controller
-        name="status"
-        control={control}
-        render={({ field: {onChange, value} }) => (
-          <Select.Root value={value} onValueChange={onChange} defaultValue={issue.status}>
-            <Select.Trigger />
-            <Select.Content>
-              <Select.Group>
-                <Select.Label>Status</Select.Label>
-                {statuses.map(status => (
-                  <Select.Item key={status} value={status}>
-                    <IssueStatusBadge status={status} />
-                  </Select.Item>
-                ))}
-              </Select.Group>
-            </Select.Content>
-          </Select.Root>
+        {issue && (
+          <Controller
+            name="status"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <Select.Root
+                value={value}
+                onValueChange={onChange}
+                defaultValue={issue.status}
+              >
+                <Select.Trigger />
+                <Select.Content>
+                  <Select.Group>
+                    <Select.Label>Status</Select.Label>
+                    {statuses.map((status) => (
+                      <Select.Item key={status} value={status}>
+                        <IssueStatusBadge status={status} />
+                      </Select.Item>
+                    ))}
+                  </Select.Group>
+                </Select.Content>
+              </Select.Root>
+            )}
+          />
         )}
-      />
-      }
         <TextField.Root
           defaultValue={issue?.title}
           placeholder="Title"
@@ -100,7 +104,8 @@ const IssueForm = ({ issue }: Props) => {
           {errors.description?.message}
         </Text>
         <Button disabled={isLoading}>
-          {issue ? "Update Issue": "Create Issue"} {isLoading && <LoadingIndicator />}{" "}
+          {issue ? "Update Issue" : "Create Issue"}{" "}
+          {isLoading && <LoadingIndicator />}{" "}
         </Button>
       </form>
     </div>
