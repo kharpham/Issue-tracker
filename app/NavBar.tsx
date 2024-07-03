@@ -10,7 +10,7 @@ import DropDown from "./DropDown";
 
 const NavBar = () => {
   return (
-    <nav className="border-b px-5 py-3 mb-6">
+    <nav className="border-b px-5 py-3 mb-6 bg-slate-200">
       <Container>
         <Flex justify="between">
           <Flex align="center" gap="3">
