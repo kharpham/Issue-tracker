@@ -6,11 +6,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FaBug } from "react-icons/fa";
 import { LoadingIndicator } from "./components";
+import DropDown from "./DropDown";
 
 const NavBar = () => {
   // usePathname is dependent on browser API
   const currentPath = usePathname();
   const { status, data: session } = useSession();
+  console.log(session);
   const links = [
     { label: "Dashboard", link: "/" },
     { label: "Issues", link: "/issues" },
@@ -44,7 +46,7 @@ const NavBar = () => {
             <Box>
               {status === "loading" && <LoadingIndicator />}
               {status === "authenticated" && (
-                <Link href="/api/auth/signout">Log out</Link>
+                <DropDown session={session}/>
               )}
               {status === "unauthenticated" && (
                 <Link href="/api/auth/signin">Log in</Link>
