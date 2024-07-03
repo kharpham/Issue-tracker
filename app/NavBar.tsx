@@ -3,10 +3,14 @@ import classNames from "classnames";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FaBug } from "react-icons/fa";
+import {useSession} from "next-auth/react"
+import { Box } from "@radix-ui/themes";
+import { LoadingIndicator } from "./components";
 
 const NavBar = () => {
   // usePathname is dependent on browser API
   const currentPath = usePathname();
+  const {status, data: session} = useSession();
   const links = [
     { label: "Dashboard", link: "/" },
     { label: "Issues", link: "/issues" },
@@ -32,6 +36,11 @@ const NavBar = () => {
           </li>
         ))}
       </ul>
+      <Box>
+        {status === "loading" && <LoadingIndicator/>}
+        {status === "authenticated" && <Link href="/api/auth/signout">Log out</Link>}
+        {status === "unauthenticated" && <Link href="/api/auth/signin">Log in</Link>}
+      </Box>
     </nav>
   );
 };
