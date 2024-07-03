@@ -22,3 +22,12 @@ export async function PATCH(
   });
   return NextResponse.json(updatedIssue);
 }
+
+
+export async function DELETE(request: NextRequest, {params}: {params : {id: string}}) {
+  const issue = await fetchSingleIssue(params.id);
+  await prisma.issue.delete({
+    where: {id: parseInt(params.id)}
+  });
+  return NextResponse.json({})
+}
