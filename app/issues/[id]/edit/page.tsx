@@ -20,3 +20,11 @@ const EditIssuePage = async ({params}: Props) => {
 }
 
 export default EditIssuePage
+
+export async function generateMetadata({params}: Props) {
+  const issue = await fetchSingleIssue(params.id);
+  return {
+    title: "Edit " + issue?.title,
+    description: "Edit etails of issue " + issue?.id,
+  }
+}
