@@ -1,6 +1,7 @@
 import IssueFormSkeleton from "../../_components/IssueFormSkeleton";
 import { fetchSingleIssue } from "../fetchSingleIssue";
 import dynamic from "next/dynamic";
+import { fetchUser } from "../page";
 
 const IssueForm = dynamic(() => import("@/app/issues/_components/IssueForm"), {
   ssr: false, loading: () => <IssueFormSkeleton selectIncluded={true}/>
@@ -13,7 +14,7 @@ interface Props {
 }
 
 const EditIssuePage = async ({params}: Props) => {
-  const issue = await fetchSingleIssue(params.id);
+  const issue = await fetchUser(params.id);
   return (
     <IssueForm issue={issue}/>
   )
@@ -22,7 +23,7 @@ const EditIssuePage = async ({params}: Props) => {
 export default EditIssuePage
 
 export async function generateMetadata({params}: Props) {
-  const issue = await fetchSingleIssue(params.id);
+  const issue = await fetchUser(params.id);
   return {
     title: "Edit " + issue?.title,
     description: "Edit etails of issue " + issue?.id,
